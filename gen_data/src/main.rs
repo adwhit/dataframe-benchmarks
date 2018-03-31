@@ -95,14 +95,14 @@ fn main() {
     let opt = Opt::from_args();
     let nrows = opt.nrows;
     println!("Generating {} rows", nrows);
-    let path = opt.path.unwrap_or(format!("data_{}rows.csv", nrows));
+    let path = opt.path.unwrap_or(format!("data_{}M_rows.csv", nrows/1000000));
     let f = File::create(&path).unwrap();
     let mut f = BufWriter::new(f);
     write_header(&mut f);
     for ix in 0..nrows {
         write_row(&mut f);
-        if ix % 500_000 == 0 && ix > 0 {
-            println!("Wrote {}k rows", ix / 1000);
+        if ix % 1_000_000 == 0 && ix > 0 {
+            println!("Wrote {}M rows", ix / 1000000);
         }
     }
     println!("Saved to {}", path);
