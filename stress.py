@@ -37,3 +37,13 @@ t, v = time_me(lambda: df.floats.sum())
 
 print("Summing floats_nan")
 t, v = time_me(lambda: df.floats_nan.sum())
+
+print("Joining to self")
+t, v = time_me(lambda: df.join(df, rsuffix="l"))
+
+def lower(df):
+    df["strings"] = df["strings"].str.lower()
+    return df
+
+print("Lowercasing strings")
+t, lowered = time_me(lambda: lower(df))
