@@ -20,7 +20,7 @@ def time_me(f):
 MB = 1024 * 1024
 
 print("Loading CSV")
-t, df = time_me(lambda: pandas.read_csv(INPUT))
+t, df = time_me(lambda: pandas.read_csv(INPUT, dtype={"categoricals": "category"}))
 
 mem = int(df.memory_usage(index=True, deep=True).sum()/MB)
 print(f"Dataframe memory usage: {mem}M")
