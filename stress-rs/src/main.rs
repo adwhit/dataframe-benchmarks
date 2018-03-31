@@ -38,6 +38,12 @@ fn sum_floats(arr: &RowVec) -> f64 {
     s
 }
 
+fn lowercase(arr: &mut RowVec) {
+    for s in &mut arr.strings {
+        *s = s.to_lowercase();
+    }
+}
+
 fn load(path: &str) -> RowVec {
     let mut reader = csv::Reader::from_path(path).unwrap();
     let mut arr = RowVec::new();
@@ -66,12 +72,16 @@ fn main() {
         println!("No file supplied");
         std::process::exit(1)
     });
-    println!("Load data");
-    let arr = timer(|| {
+    let mut arr = timer(|| {
+        println!("Load data");
         load(&path)
     });
-    println!("Sum floats");
-    let sum_flt = timer(|| {
+    let _sum_flt = timer(|| {
+        println!("Sum floats");
         sum_floats(&arr)
+    });
+    timer(|| {
+        println!("Lowercase strings");
+        lowercase(&mut arr)
     });
 }
