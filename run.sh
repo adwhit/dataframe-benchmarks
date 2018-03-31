@@ -1,7 +1,8 @@
-cargo build --release --manifest-path gen_data/Cargo.toml
-# cargo run --release --manifest-path gen_data/Cargo.toml -- -n 1000000
-# cargo run --release --manifest-path gen_data/Cargo.toml -- -n 10000000
-# cargo run --release --manifest-path gen_data/Cargo.toml -- -n 50000000
+cargo build --release --manifest-path gen-data/Cargo.toml
+cp gen-data/target/release/gen-data gen-data/
+gen-data/gen-data -n 1000000
+# ./gen-data -n 10000000
+# ./gen-data -n 50000000
 
 echo "\nRunning python bench"
 python3 stress.py data_10M_rows.csv

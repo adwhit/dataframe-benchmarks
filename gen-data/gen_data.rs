@@ -4,11 +4,10 @@ extern crate rand_derive;
 #[macro_use]
 extern crate structopt;
 
-
-
 use structopt::StructOpt;
 use rand::{thread_rng, Rng};
 
+use std::path::PathBuf;
 use std::fs::*;
 use std::io::prelude::*;
 use std::io::BufWriter;
@@ -96,6 +95,11 @@ fn main() {
     let nrows = opt.nrows;
     println!("Generating {} rows", nrows);
     let path = opt.path.unwrap_or(format!("data_{}M_rows.csv", nrows/1000000));
+    let path = PathBuf::from(path);
+    if path.exists() {
+        println!("File {} already exists", path.display());
+        std::process::exit(1)
+    }
     let f = File::create(&path).unwrap();
     let mut f = BufWriter::new(f);
     write_header(&mut f);
@@ -105,5 +109,5 @@ fn main() {
             println!("Wrote {}M rows", ix / 1000000);
         }
     }
-    println!("Saved to {}", path);
+    println!("Saved to {}", path.display());
 }
