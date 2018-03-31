@@ -40,7 +40,7 @@ fn sum_floats(arr: &RowVec) -> f64 {
 
 fn lowercase(arr: &mut RowVec) {
     for s in &mut arr.strings {
-        *s = s.to_lowercase();
+        *s = s.to_ascii_lowercase();
     }
 }
 
