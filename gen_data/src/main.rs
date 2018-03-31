@@ -1,15 +1,29 @@
 extern crate rand;
 #[macro_use]
 extern crate rand_derive;
+#[macro_use]
+extern crate structopt;
 
+
+
+use structopt::StructOpt;
 use rand::{thread_rng, Rng};
+
 use std::fs::*;
 use std::io::prelude::*;
 use std::io::BufWriter;
 
+#[derive(StructOpt, Debug)]
+#[structopt(name = "basic")]
+struct Opt {
+    #[structopt(short = "n")]
+    nrows: i32,
+    #[structopt(short = "o")]
+    path: Option<String>,
+}
+
 const LETTERS: &[u8] = b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 _";
 const STRLEN: usize = 20;
-const NROWS: usize = 20_000_000;
 
 
 #[derive(Debug, Clone, Copy, Rand)]
@@ -78,12 +92,10 @@ fn write_header<W: Write>(w: &mut W) {
 }
 
 fn main() {
-    let nrows = NROWS;
-    let dirpath = "../data";
-    if let Err(_) = DirBuilder::new().create(dirpath) {
-        // ignore error
-    }
-    let path = format!("{}/data_{}rows.csv", dirpath, nrows);
+    let opt = Opt::from_args();
+    let nrows = opt.nrows;
+    println!("Generating {} rows", nrows);
+    let path = opt.path.unwrap_or(format!("data_{}rows.csv", nrows));
     let f = File::create(&path).unwrap();
     let mut f = BufWriter::new(f);
     write_header(&mut f);
@@ -93,5 +105,5 @@ fn main() {
             println!("Wrote {}k rows", ix / 1000);
         }
     }
-    println!("Created file {}", path);
+    println!("Saved to {}", path);
 }

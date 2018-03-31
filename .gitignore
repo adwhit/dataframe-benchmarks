@@ -2,3 +2,4 @@ data/
 target/
 **/*.rs.bk
 Cargo.lock
+*.csv
