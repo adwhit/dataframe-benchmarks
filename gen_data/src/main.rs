@@ -5,6 +5,7 @@ extern crate rand_derive;
 use rand::{thread_rng, Rng};
 use std::fs::*;
 use std::io::prelude::*;
+use std::io::BufWriter;
 
 const LETTERS: &[u8] = b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 _";
 const STRLEN: usize = 20;
@@ -32,10 +33,10 @@ struct Row {
     cat: Colour,
 }
 
-fn random_word(len: usize) -> [u8; STRLEN] {
+fn random_word() -> [u8; STRLEN] {
     let mut rng = thread_rng();
     let mut buf = [0u8; STRLEN];
-    for ix in 0..len {
+    for ix in 0..STRLEN {
         let cix = rng.gen::<usize>() % LETTERS.len();
         buf[ix] = LETTERS[cix];
     }
@@ -51,7 +52,7 @@ fn rand_row() -> Row {
     } else {
         std::f64::NAN
     };
-    let word = random_word(20);
+    let word = random_word();
     let cat = rng.gen();
     Row {
         i,
@@ -83,12 +84,13 @@ fn main() {
         // ignore error
     }
     let path = format!("{}/data_{}rows.csv", dirpath, nrows);
-    let mut f = File::create(&path).unwrap();
+    let f = File::create(&path).unwrap();
+    let mut f = BufWriter::new(f);
     write_header(&mut f);
     for ix in 0..nrows {
         write_row(&mut f);
-        if ix % 100_000 == 0 && ix > 0 {
-            println!("Processed {} rows", ix);
+        if ix % 500_000 == 0 && ix > 0 {
+            println!("Wrote {}k rows", ix / 1000);
         }
     }
     println!("Created file {}", path);
