@@ -30,20 +30,23 @@ procmem = int(process.memory_info().rss/MB)
 print(f"Process memory usage: {procmem}M")
 
 print("Summing ints")
-t, v = time_me(lambda: df.ints.sum())
+time_me(lambda: df.ints.sum())
 
 print("Summing floats")
-t, v = time_me(lambda: df.floats.sum())
+time_me(lambda: df.floats.sum())
 
 print("Summing floats_nan")
-t, v = time_me(lambda: df.floats_nan.sum())
-
-print("Joining to self")
-t, v = time_me(lambda: df.join(df, rsuffix="l"))
+time_me(lambda: df.floats_nan.sum())
 
 def lower(df):
     df["strings"] = df["strings"].str.lower()
     return df
 
 print("Lowercasing strings")
-t, lowered = time_me(lambda: lower(df))
+time_me(lambda: lower(df))
+
+print("Group by category")
+time_me(lambda: df.groupby("categoricals").sum())
+
+print("Joining to self on ints")
+time_me(lambda: df.join(df.set_index("ints"), on="ints", rsuffix="l"))

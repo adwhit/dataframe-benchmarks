@@ -58,10 +58,13 @@ fn random_word() -> [u8; STRLEN] {
 
 fn rand_row() -> Row {
     let mut rng = thread_rng();
-    let i = rng.gen();
-    let f = rng.gen();
+    // i between -10000 and 10000
+    let i = rng.gen::<i32>() % 10000;
+    // f between -0.5 and 0.5
+    let f = rng.gen::<f64>() - 0.5;
+    // f_nan between -0.5 and 0.5 or nan 20% of time
     let f_nan = if rng.gen::<f32>() < 0.8 {
-        rng.gen()
+        rng.gen::<f64>() - 0.5
     } else {
         std::f64::NAN
     };
